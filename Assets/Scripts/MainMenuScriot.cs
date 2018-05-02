@@ -84,6 +84,6 @@ public class MainMenuScriot : MonoBehaviour {
     private void showToast(string toastText)
     {
           //Перед использованием в плагине на сцену установить Prefab из папки Demo Плагина  
-     //   AndroidDialogAndToastBinding.instance.toastShort(toastText);
+        AndroidDialogAndToastBinding.instance.toastShort(toastText);
     }
 }
