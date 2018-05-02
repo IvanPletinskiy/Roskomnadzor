@@ -10,7 +10,7 @@ public class Preferences {
 
     public static int getMultiplayer()
     {
-        return PlayerPrefs.GetInt(MULTIPLAYER);
+        return PlayerPrefs.GetInt(MULTIPLAYER, 1);
     }
 
     /// <summary>

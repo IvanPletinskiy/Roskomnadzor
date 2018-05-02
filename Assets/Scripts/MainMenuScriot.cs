@@ -77,7 +77,6 @@ public class MainMenuScriot : MonoBehaviour {
                         showToast("Произошла ошибка, не получается открыть таблицу рекордов");
                 });
             }
-
         }
     }
     
