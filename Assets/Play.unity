@@ -490,6 +490,9 @@ MonoBehaviour:
   animLeft: {fileID: 1594254034}
   animRight: {fileID: 1172123592}
   mainCamera: {fileID: 97431633}
+  scoreText: {fileID: 1595527957}
+  ipsText: {fileID: 66375025}
+  multiplayerText: {fileID: 1965725082}
 --- !u!1 &386501633
 GameObject:
   m_ObjectHideFlags: 0
