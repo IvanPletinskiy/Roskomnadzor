@@ -39,16 +39,15 @@ public class PlayScript : MonoBehaviour {
     void Start () {
         multiplayer = Preferences.getMultiplayer();
 		animBackground.SetActive (true);
-  //      StartCoroutine("updateIPS");
-  //      StartCoroutine("multiplayer5s");
     }
 
 	void Update () {
+
         updateScore();
         updateMultiplayer();
 
         if (Roskomnadzor.transform.localScale.x > 1.7f) {
-			Roskomnadzor.transform.localScale = new Vector2(Roskomnadzor.transform.localScale.x - 0.001f,Roskomnadzor.transform.localScale.y - 0.001f);
+			Roskomnadzor.transform.localScale = new Vector2(Roskomnadzor.transform.localScale.x-0.02f,Roskomnadzor.transform.localScale.y-0.02f);
 		}
 		if (timer1s <= 1) { // это еще проще
             timer1s += Time.deltaTime;		
@@ -57,7 +56,7 @@ public class PlayScript : MonoBehaviour {
             generateBonus();
 		}
         else { 
-			float ips = (float) (clicks1s  * multiplayer);
+			float ips = (float) clicks1s;
 			print (ips);
 			ipsText.text = ips.ToString()+ " IP/s";
 			clicks1s = 0;
@@ -68,6 +67,7 @@ public class PlayScript : MonoBehaviour {
                 
         }
         else {
+           
             int newMultiplayerBonus = countMultiplyaer5s();
             if (newMultiplayerBonus > multiplayer5sBonus) {
                 multiplayer5sBonus++;
@@ -92,31 +92,43 @@ public class PlayScript : MonoBehaviour {
 					StartCoroutine (loadMainMenu ());
 					break;
 				case "Roscomnadzor":
-					hit.collider.transform.localScale =new Vector2(Roskomnadzor.transform.localScale.x + 0.03f,Roskomnadzor.transform.localScale.y + 0.03f);
+					hit.collider.transform.localScale = new Vector2 (Roskomnadzor.transform.localScale.x + 0.1f, Roskomnadzor.transform.localScale.y + 0.1f);
+					clicks1s++;
+					clicks5s++;
+					Preferences.setScore (Preferences.getScore()+multiplayer);
 					break;
 				}
 			}
 		}
-        if (Input.touchCount == 1) {
-            if (isOnetouch) {
+        if (Input.touchCount == 1)
+        {
+            if (isOnetouch)
+            {
                 RaycastHit hit;
                 Ray ray = mainCamera.ScreenPointToRay(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Input.mousePosition.z));
-                if (Physics.Raycast(ray, out hit)) {
-                    if (hit.collider.name == "Roscomnadzor") {
+                if (Physics.Raycast(ray, out hit))
+                {
+                    if (hit.collider.name == "Roscomnadzor")
+                    {
                         click();
                     }
                 }
                 isOnetouch = false;
             }
         }
-        else if (Input.touchCount > 1) {
-            if (isMultitouch) {
+        else if (Input.touchCount > 1)
+        {
+            if (isMultitouch)
+            {
                 Touch[] touches = Input.touches;
-                for (int i = 0; i < Input.touchCount; i++) {
+                for (int i = 0; i < Input.touchCount; i++)
+                {
                     Ray ray = mainCamera.ScreenPointToRay(touches[i].position);
                     RaycastHit hit;
-                    if (Physics.Raycast(ray, out hit)) {
-                        if (hit.collider.name == "Roscomnadzor") {
+                    if (Physics.Raycast(ray, out hit))
+                    {
+                        if (hit.collider.name == "Roscomnadzor")
+                        {
                             click();
                         }
                     }
@@ -124,11 +136,13 @@ public class PlayScript : MonoBehaviour {
                 isMultitouch = false;
             }
         }
-        else {
+        else
+        {
             isMultitouch = true;
             isOnetouch = true;
         }
     }
+
 
     private void generateBonus()
     {
@@ -137,20 +151,20 @@ public class PlayScript : MonoBehaviour {
     }
 
     private int countMultiplyaer5s() {
-        if (clicks5s < 40)
+        if (clicks5s <= 40)
             return 1;
-        else if (clicks5s < 60)
+        else if (clicks5s <= 60)
             return 2;
-        else if (clicks5s < 80)
+        else if (clicks5s <= 80)
             return 3;
-        else if (clicks5s < 100)
+        else if (clicks5s <= 100)
             return 4;
         else 
             return 5;
     }
 
     private void updateScore() { //обновляем текст Score
-        scoreText.text = score.ToString();
+		scoreText.text = Preferences.getScore().ToString();
     }
 
     private void updateMultiplayer() { //обновляем multiplayer и текст Multiplayer
