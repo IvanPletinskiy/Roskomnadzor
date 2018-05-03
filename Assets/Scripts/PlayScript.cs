@@ -52,8 +52,7 @@ public class PlayScript : MonoBehaviour {
 		}
 		if (timer1s <= 1) { // это еще проще
 			timer1s += Time.deltaTime;
-			if (Input.GetKeyDown (KeyCode.Mouse0))
-				clicks1s++;
+				
 			print (clicks1s);
 		}
         else { 
@@ -64,9 +63,8 @@ public class PlayScript : MonoBehaviour {
 			timer1s = 0;
 		}
         if (timer5s <= 5) {
-            timer5s += Time.deltaTime;
-            if (Input.GetKeyDown(KeyCode.Mouse0))
-                clicks5s++;
+			timer5s += Time.deltaTime;
+                
         }
         else {
            
@@ -95,6 +93,8 @@ public class PlayScript : MonoBehaviour {
 					break;
 				case "Roscomnadzor":
 					hit.collider.transform.localScale =new Vector2(Roskomnadzor.transform.localScale.x+0.1f,Roskomnadzor.transform.localScale.y+0.1f);
+					clicks1s++;
+					clicks5s++;
 					break;
 				}
 			}
