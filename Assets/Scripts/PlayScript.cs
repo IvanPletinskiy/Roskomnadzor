@@ -38,8 +38,6 @@ public class PlayScript : MonoBehaviour {
     void Start () {
         multiplayer = Preferences.getMultiplayer();
 		animBackground.SetActive (true);
-  //      StartCoroutine("updateIPS");
-        StartCoroutine("multiplayer5s");
     }
 
 	void Update () {
@@ -56,7 +54,7 @@ public class PlayScript : MonoBehaviour {
 			print (clicks1s);
 		}
         else { 
-			float ips = (float) (clicks1s  * multiplayer);
+			float ips = (float) clicks1s;
 			print (ips);
 			ipsText.text = ips.ToString()+ " IP/s";
 			clicks1s = 0;
@@ -92,9 +90,10 @@ public class PlayScript : MonoBehaviour {
 					StartCoroutine (loadMainMenu ());
 					break;
 				case "Roscomnadzor":
-					hit.collider.transform.localScale =new Vector2(Roskomnadzor.transform.localScale.x+0.1f,Roskomnadzor.transform.localScale.y+0.1f);
+					hit.collider.transform.localScale = new Vector2 (Roskomnadzor.transform.localScale.x + 0.1f, Roskomnadzor.transform.localScale.y + 0.1f);
 					clicks1s++;
 					clicks5s++;
+					Preferences.setScore (Preferences.getScore()+multiplayer);
 					break;
 				}
 			}
@@ -144,20 +143,20 @@ public class PlayScript : MonoBehaviour {
     
     private int countMultiplyaer5s()
     {
-        if (clicks5s < 40)
+        if (clicks5s <= 20)
             return 1;
-        else if (clicks5s < 60)
+        else if (clicks5s <= 40)
             return 2;
-        else if (clicks5s < 80)
+        else if (clicks5s <= 60)
             return 3;
-        else if (clicks5s < 100)
+        else if (clicks5s <= 80)
             return 4;
         else 
             return 5;
     }
 
     private void updateScore() { //обновляем текст Score
-        scoreText.text = score.ToString();
+		scoreText.text = Preferences.getScore().ToString();
     }
 
     private void updateMultiplayer() { //обновляем multiplayer и текст Multiplayer
