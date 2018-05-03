@@ -48,7 +48,7 @@ public class PlayScript : MonoBehaviour {
         updateMultiplayer();
 
         if (Roskomnadzor.transform.localScale.x > 1.7f) {
-			Roskomnadzor.transform.localScale = new Vector2(Roskomnadzor.transform.localScale.x-0.01f,Roskomnadzor.transform.localScale.y-0.01f);
+			Roskomnadzor.transform.localScale = new Vector2(Roskomnadzor.transform.localScale.x-0.02f,Roskomnadzor.transform.localScale.y-0.02f);
 		}
 		if (timer1s <= 1) { // это еще проще
 			timer1s += Time.deltaTime;
