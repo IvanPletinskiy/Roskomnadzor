@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class PlayScript : MonoBehaviour {
 
+	public GameObject Roskomnadzor;
 
 	public RuntimeAnimatorController left;
 	public RuntimeAnimatorController leftClose;
@@ -21,9 +22,11 @@ public class PlayScript : MonoBehaviour {
     public Text ipsText;
     public Text multiplayerText;
 
+	float timer=0;
+
     private int score; //счёт для надписи Score 
-    private int clicks1s; //кликов за прошлую секунду
-    private int clicks5s; //кликов за 5 секунд
+    private int clicks1s=0; //кликов за прошлую секунду
+    private int clicks5s=0; //кликов за 5 секунд
     private int baseMultiplayer = 1; //базовый множитель, увеличивается при достижении отметки 100, 1000, 10000 ip
     private int multiplayer5sBonus = 1; // множитель клика за 5 секунд (чем чаще кликает пользователь, тем он больше) обновляется каждые 5 сек
     private int multiplayer = 1; //итоговый множитель
@@ -39,6 +42,23 @@ public class PlayScript : MonoBehaviour {
     }
 
 	void Update () {
+
+		if (Roskomnadzor.transform.localScale.x > 1.7f) {
+			Roskomnadzor.transform.localScale = new Vector2(Roskomnadzor.transform.localScale.x-0.01f,Roskomnadzor.transform.localScale.y-0.01f);
+		}
+		if (timer <= 5) { // это еще проще
+			timer += Time.deltaTime;
+			if (Input.GetKeyDown (KeyCode.Mouse0))
+				clicks5s++;
+			print (clicks5s);
+		} else {
+			
+			float ips = (float)clicks5s / 5;
+			print (ips);
+			ipsText.text = ips.ToString()+ " IP/s";
+			clicks5s = 0;
+			timer = 0;
+		}
         updateScore();
         updateMultiplayer();
 		if (Input.GetKeyDown (KeyCode.Mouse0)) {
@@ -50,6 +70,9 @@ public class PlayScript : MonoBehaviour {
 					animLeft.GetComponent<Animator> ().runtimeAnimatorController = leftClose;
 					animRight.GetComponent<Animator> ().runtimeAnimatorController = rightClose;
 					StartCoroutine (loadMainMenu ());
+					break;
+				case "Roscomnadzor":
+					hit.collider.transform.localScale =new Vector2(Roskomnadzor.transform.localScale.x+0.1f,Roskomnadzor.transform.localScale.y+0.1f);
 					break;
 				}
 			}
@@ -113,31 +136,7 @@ public class PlayScript : MonoBehaviour {
         score += 1 * multiplayer;
     }
 
-    IEnumerator updateIPS() //корутина обновления ips, вызывается каждую сек
-    {
-        yield return new WaitForSeconds(1f);
-        ipsText.text = (clicks1s * multiplayer).ToString() + " ip/s";
-        clicks1s = 0;
-        StartCoroutine("updateIPS");
-    }
 
-    IEnumerator multiplayer5s() //корутина обновления multiplayer5s, вызывается каждые 5 сек
-    {
-        yield return new WaitForSeconds(5f);
-        double myDouble = 20 / clicks5s;
-        int newMultiplayerBonus = (int) (myDouble * 5);
-        if (newMultiplayerBonus > multiplayer5sBonus) {
-            multiplayer5sBonus++;
- //           updateMultiplayer();
-        }
-        if (newMultiplayerBonus < multiplayer) {
-            if(multiplayer5sBonus != 1)
-                multiplayer5sBonus--;
-//            updateMultiplayer();
-        }
-        clicks5s = 0;
-        StartCoroutine("multiplayer5s");
-    }
 
     IEnumerator loadMainMenu() {
 		yield return new WaitForSeconds (1f);
