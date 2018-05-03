@@ -22,7 +22,8 @@ public class PlayScript : MonoBehaviour {
     public Text ipsText;
     public Text multiplayerText;
 
-	float timer=0;
+	float timer1s = 0;
+    float timer5s = 0;
 
     private int score; //счёт для надписи Score 
     private int clicks1s=0; //кликов за прошлую секунду
@@ -37,30 +38,51 @@ public class PlayScript : MonoBehaviour {
     void Start () {
         multiplayer = Preferences.getMultiplayer();
 		animBackground.SetActive (true);
-        StartCoroutine("updateIPS");
+  //      StartCoroutine("updateIPS");
         StartCoroutine("multiplayer5s");
     }
 
 	void Update () {
 
-		if (Roskomnadzor.transform.localScale.x > 1.7f) {
-			Roskomnadzor.transform.localScale = new Vector2(Roskomnadzor.transform.localScale.x-0.01f,Roskomnadzor.transform.localScale.y-0.01f);
-		}
-		if (timer <= 5) { // это еще проще
-			timer += Time.deltaTime;
-			if (Input.GetKeyDown (KeyCode.Mouse0))
-				clicks5s++;
-			print (clicks5s);
-		} else {
-			
-			float ips = (float)clicks5s / 5;
-			print (ips);
-			ipsText.text = ips.ToString()+ " IP/s";
-			clicks5s = 0;
-			timer = 0;
-		}
         updateScore();
         updateMultiplayer();
+
+        if (Roskomnadzor.transform.localScale.x > 1.7f) {
+			Roskomnadzor.transform.localScale = new Vector2(Roskomnadzor.transform.localScale.x-0.01f,Roskomnadzor.transform.localScale.y-0.01f);
+		}
+		if (timer1s <= 1) { // это еще проще
+			timer1s += Time.deltaTime;
+			if (Input.GetKeyDown (KeyCode.Mouse0))
+				clicks1s++;
+			print (clicks1s);
+		}
+        else { 
+			float ips = (float) (clicks1s  * multiplayer);
+			print (ips);
+			ipsText.text = ips.ToString()+ " IP/s";
+			clicks1s = 0;
+			timer1s = 0;
+		}
+        if (timer5s <= 5) {
+            timer5s += Time.deltaTime;
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+                clicks5s++;
+        }
+        else {
+           
+            int newMultiplayerBonus = countMultiplyaer5s();
+            if (newMultiplayerBonus > multiplayer5sBonus) {
+                multiplayer5sBonus++;
+                
+            }
+            if (newMultiplayerBonus < multiplayer) {
+               if (multiplayer5sBonus != 1)
+                    multiplayer5sBonus--;
+                
+            }
+            clicks5s = 0;
+            timer5s = 0;
+        }
 		if (Input.GetKeyDown (KeyCode.Mouse0)) {
 			Ray ray = mainCamera.ScreenPointToRay (Input.mousePosition);
 			RaycastHit hit;
@@ -119,6 +141,20 @@ public class PlayScript : MonoBehaviour {
             isOnetouch = true;
         }
     }
+    
+    private int countMultiplyaer5s()
+    {
+        if (clicks5s < 40)
+            return 1;
+        else if (clicks5s < 60)
+            return 2;
+        else if (clicks5s < 80)
+            return 3;
+        else if (clicks5s < 100)
+            return 4;
+        else 
+            return 5;
+    }
 
     private void updateScore() { //обновляем текст Score
         scoreText.text = score.ToString();
@@ -135,8 +171,6 @@ public class PlayScript : MonoBehaviour {
         clicks5s++;
         score += 1 * multiplayer;
     }
-
-
 
     IEnumerator loadMainMenu() {
 		yield return new WaitForSeconds (1f);

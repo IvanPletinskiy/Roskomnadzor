@@ -1480,8 +1480,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 3.31, y: 2.94, z: 0.2}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 2.8317492, y: 2.7805827, z: 0.2}
+  m_Center: {x: -0.036231067, y: 0.021738727, z: 0}
 --- !u!212 &1334931792
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2395,7 +2395,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: X2
+  m_Text: 
 --- !u!222 &1965725083
 CanvasRenderer:
   m_ObjectHideFlags: 0
