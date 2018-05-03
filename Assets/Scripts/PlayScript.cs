@@ -8,6 +8,8 @@ public class PlayScript : MonoBehaviour {
 
 	public GameObject Roskomnadzor;
 
+	public GameObject adButton;
+
 	public RuntimeAnimatorController left;
 	public RuntimeAnimatorController leftClose;
 	public RuntimeAnimatorController right;
@@ -28,20 +30,26 @@ public class PlayScript : MonoBehaviour {
     private int score; //счёт для надписи Score 
     private int clicks1s=0; //кликов за прошлую секунду
     private int clicks5s=0; //кликов за 5 секунд
-    private int baseMultiplayer = 1; //базовый множитель, увеличивается при достижении отметки 100, 1000, 10000 ip
+	private int baseMultiplayer = 1;//базовый множитель, увеличивается при достижении отметки 100, 1000, 10000 ip,
+	int scoreToMultiple=100;
     private int multiplayer5sBonus = 1; // множитель клика за 5 секунд (чем чаще кликает пользователь, тем он больше) обновляется каждые 5 сек
     private int multiplayer = 1; //итоговый множитель
+	int multipleX10=1;
 
     bool isMultitouch;
     bool isOnetouch;
 
     void Start () {
+		//Preferences.setScore (0);
         multiplayer = Preferences.getMultiplayer();
 		animBackground.SetActive (true);
     }
 
 	void Update () {
-
+		if (Preferences.getScore () >= scoreToMultiple) {
+			baseMultiplayer++;
+			scoreToMultiple*=10;
+		}
         updateScore();
         updateMultiplayer();
 
@@ -51,7 +59,6 @@ public class PlayScript : MonoBehaviour {
 		if (timer1s <= 1) { // это еще проще
 			timer1s += Time.deltaTime;
 				
-			print (clicks1s);
 		}
         else { 
 			float ips = (float) clicks1s;
@@ -65,17 +72,8 @@ public class PlayScript : MonoBehaviour {
                 
         }
         else {
-           
-            int newMultiplayerBonus = countMultiplyaer5s();
-            if (newMultiplayerBonus > multiplayer5sBonus) {
-                multiplayer5sBonus++;
-                
-            }
-            if (newMultiplayerBonus < multiplayer) {
-               if (multiplayer5sBonus != 1)
-                    multiplayer5sBonus--;
-                
-            }
+			print (clicks5s);
+			multiplayer5sBonus = countMultiplyaer5s ();
             clicks5s = 0;
             timer5s = 0;
         }
@@ -95,6 +93,15 @@ public class PlayScript : MonoBehaviour {
 					clicks5s++;
 					Preferences.setScore (Preferences.getScore()+multiplayer);
 					break;
+				case "Ad":
+					print ("Ad");
+					//запуск рекламы
+					multipleX10 = 10;
+					hit.collider.gameObject.SetActive (false);
+					StartCoroutine (wait5Minutes());
+					StartCoroutine (wait10Minutes());
+					break;
+
 				}
 			}
 		}
@@ -160,7 +167,7 @@ public class PlayScript : MonoBehaviour {
     }
 
     private void updateMultiplayer() { //обновляем multiplayer и текст Multiplayer
-        multiplayer = baseMultiplayer * multiplayer5sBonus;
+		multiplayer = baseMultiplayer * multiplayer5sBonus* multipleX10;
         multiplayerText.text = "X" + multiplayer.ToString();
     }
 
@@ -174,5 +181,14 @@ public class PlayScript : MonoBehaviour {
     IEnumerator loadMainMenu() {
 		yield return new WaitForSeconds (1f);
 		SceneManager.LoadScene ("Main menu");
+	}
+
+	IEnumerator wait5Minutes(){
+		yield return new WaitForSeconds (30);//5 минут (изменил на 30 секунд для теста)
+		multipleX10 =1;
+	}
+	IEnumerator wait10Minutes(){
+		yield return new WaitForSeconds (60);//10 минут (изменил на 60 секунд для теста)
+		adButton.SetActive(true);
 	}
 }
