@@ -28,10 +28,10 @@ public class PlayScript : MonoBehaviour {
     float timer5s = 0;
 
     private int score; //счёт для надписи Score 
-    private int clicks1s=0; //кликов за прошлую секунду
-    private int clicks5s=0; //кликов за 5 секунд
+    private int clicks1s = 0; //кликов за прошлую секунду
+    private int clicks5s = 0; //кликов за 5 секунд
 	private int baseMultiplayer = 1;//базовый множитель, увеличивается при достижении отметки 100, 1000, 10000 ip,
-	int scoreToMultiple=100;
+	int scoreToMultiple = 100;
     private int multiplayer5sBonus = 1; // множитель клика за 5 секунд (чем чаще кликает пользователь, тем он больше) обновляется каждые 5 сек
     private int multiplayer = 1; //итоговый множитель
 	int multipleX10=1;
@@ -48,7 +48,7 @@ public class PlayScript : MonoBehaviour {
 	void Update () {
 		if (Preferences.getScore () >= scoreToMultiple) {
 			baseMultiplayer++;
-			scoreToMultiple*=10;
+			scoreToMultiple *= 10;
 		}
         updateScore();
         updateMultiplayer();
@@ -89,9 +89,7 @@ public class PlayScript : MonoBehaviour {
 					break;
 				case "Roscomnadzor":
 					hit.collider.transform.localScale = new Vector2 (Roskomnadzor.transform.localScale.x + 0.1f, Roskomnadzor.transform.localScale.y + 0.1f);
-					clicks1s++;
-					clicks5s++;
-					Preferences.setScore (Preferences.getScore()+multiplayer);
+					click();
 					break;
 				case "Ad":
 					print ("Ad");
@@ -161,6 +159,10 @@ public class PlayScript : MonoBehaviour {
         else 
             return 5;
     }
+
+	void onDisable() {
+		Preferences.setScore (Preferences.getScore() + multiplayer);
+	}
 
     private void updateScore() { //обновляем текст Score
 		scoreText.text = Preferences.getScore().ToString();
