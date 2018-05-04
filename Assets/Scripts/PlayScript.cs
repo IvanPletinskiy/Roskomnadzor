@@ -168,10 +168,7 @@ public class PlayScript : MonoBehaviour {
         else 
             return 5;
     }
-
-	void OnDisable() {
-		Preferences.setScore (Preferences.getScore() + multiplayer);
-	}
+		
 
     private void updateScore() { //обновляем текст Score
 		scoreText.text = Preferences.getScore().ToString();
@@ -186,7 +183,7 @@ public class PlayScript : MonoBehaviour {
         Debug.Log("click");
         clicks1s++;
         clicks5s++;
-        score += 1 * multiplayer;
+		Preferences.setScore (Preferences.getScore() + multiplayer);
     }
 
     IEnumerator loadMainMenu() {
