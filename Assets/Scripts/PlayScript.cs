@@ -8,7 +8,13 @@ public class PlayScript : MonoBehaviour {
 
 	public GameObject Roskomnadzor;
 
+	public GameObject pointPath;
+
+	public GameObject[] bonus;
+
 	public GameObject adButton;
+
+	int numberOfLogo=2;
 
 	public RuntimeAnimatorController left;
 	public RuntimeAnimatorController leftClose;
@@ -23,22 +29,27 @@ public class PlayScript : MonoBehaviour {
     public Text scoreText;
     public Text ipsText;
     public Text multiplayerText;
-    public Image bonus;
 
 	float timer1s = 0;
     float timer5s = 0;
+
+	float speedOfBonus = 0.4f;
 
     private int score; //счёт для надписи Score 
     private int clicks1s = 0; //кликов за прошлую секунду
     private int clicks5s = 0; //кликов за 5 секунд
 	private int baseMultiplayer = 1;//базовый множитель, увеличивается при достижении отметки 100, 1000, 10000 ip,
 	int scoreToMultiple = 100;
+	int multipleLogo=1;
     private int multiplayer5sBonus = 1; // множитель клика за 5 секунд (чем чаще кликает пользователь, тем он больше) обновляется каждые 5 сек
     private int multiplayer = 1; //итоговый множитель
 	int multipleX10=1;
 
+	bool isCreateNewLogo=true;
+
     bool isMultitouch;
     bool isOnetouch;
+
 
     void Start () {
 		//Preferences.setScore (0);
@@ -47,6 +58,11 @@ public class PlayScript : MonoBehaviour {
     }
 
 	void Update () {
+		for(int i =0;i< numberOfLogo;i++){
+			bonus[i].transform.localPosition = Vector3.Lerp (bonus[i].transform.localPosition, pointPath.transform.localPosition, speedOfBonus);
+		}
+			
+
 		if (Preferences.getScore () >= scoreToMultiple) {
 			baseMultiplayer++;
 			scoreToMultiple *= 10;
@@ -59,9 +75,7 @@ public class PlayScript : MonoBehaviour {
 															Roskomnadzor.transform.localScale.y - 0.02f);
 		}
 		if (timer1s <= 1) { // это еще проще
-            timer1s += Time.deltaTime;		
-			print (clicks1s);          
-            generateBonus();
+            timer1s += Time.deltaTime;		        
 		}
         else { 
 			float ips = (float) clicks1s;
@@ -91,6 +105,8 @@ public class PlayScript : MonoBehaviour {
 					StartCoroutine (loadMainMenu ());
 					break;
 				case "Roscomnadzor":
+					if (Random.Range (1, 4) == 1) //вероятность включения лого (сейчас шанс выпадения - 1 к 3)
+						generateBonus ();
 					hit.collider.transform.localScale = new Vector2 (Roskomnadzor.transform.localScale.x + 0.1f, Roskomnadzor.transform.localScale.y + 0.1f);
 					click();
 					break;
@@ -101,6 +117,12 @@ public class PlayScript : MonoBehaviour {
 					hit.collider.gameObject.SetActive (false);
 					StartCoroutine(wait5Minutes());
 					StartCoroutine(wait10Minutes());
+					break;
+				case "Collider":
+					multipleLogo = 15;
+					for (int a = 0; a < numberOfLogo; a++)
+						bonus [a].SetActive (false);
+					StartCoroutine (wait10Seconds ());
 					break;
 
 				}
@@ -152,8 +174,12 @@ public class PlayScript : MonoBehaviour {
 
     private void generateBonus()
     {
-       // Image image = Instantiate(bonus, new Vector3(0f, -1f, 0f), new Quaternion()) as Image;
-       // image.overrideSprite =  Resources.Load<Sprite>("Pictures/viber");
+		if (isCreateNewLogo) {
+			int randomLogo = Random.Range (0, 2);
+			bonus [randomLogo].SetActive (true);
+			isCreateNewLogo = false;
+		}
+
     }
 
     private int countMultiplyaer5s() {
@@ -169,18 +195,20 @@ public class PlayScript : MonoBehaviour {
             return 5;
     }
 		
+	public static void positionPointGenerating(GameObject pointPath){
+		pointPath.transform.localPosition = new Vector3 (Random.Range (-278, 286), Random.Range (-590, 511),pointPath.transform.localPosition.z);
+	}
 
     private void updateScore() { //обновляем текст Score
 		scoreText.text = Preferences.getScore().ToString();
     }
 
     private void updateMultiplayer() { //обновляем multiplayer и текст Multiplayer
-		multiplayer = baseMultiplayer * multiplayer5sBonus* multipleX10;
+		multiplayer = baseMultiplayer * multiplayer5sBonus* multipleX10*multipleLogo;
         multiplayerText.text = "X" + multiplayer.ToString();
     }
 
     private void click() { // метод обработки клика, увеличиваем счёт и все нажатия
-        Debug.Log("click");
         clicks1s++;
         clicks5s++;
 		Preferences.setScore (Preferences.getScore() + multiplayer);
@@ -189,6 +217,12 @@ public class PlayScript : MonoBehaviour {
     IEnumerator loadMainMenu() {
 		yield return new WaitForSeconds (1f);
 		SceneManager.LoadScene ("Main menu");
+	}
+
+	IEnumerator wait10Seconds(){
+		yield return new WaitForSeconds (10);
+		multipleLogo= 1;
+		isCreateNewLogo = true;
 	}
 
 	IEnumerator wait5Minutes(){
