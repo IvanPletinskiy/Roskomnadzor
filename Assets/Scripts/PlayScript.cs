@@ -42,7 +42,7 @@ public class PlayScript : MonoBehaviour {
     void Start () {
 		//Preferences.setScore (0);
         multiplayer = Preferences.getMultiplayer();
-		animBackground.SetActive (true);
+		animBackground.SetActive(true);
     }
 
 	void Update () {
@@ -54,7 +54,8 @@ public class PlayScript : MonoBehaviour {
         updateMultiplayer();
 
         if (Roskomnadzor.transform.localScale.x > 1.7f) {
-			Roskomnadzor.transform.localScale = new Vector2(Roskomnadzor.transform.localScale.x-0.02f,Roskomnadzor.transform.localScale.y-0.02f);
+			Roskomnadzor.transform.localScale = new Vector2(Roskomnadzor.transform.localScale.x - 0.02f, 
+															Roskomnadzor.transform.localScale.y - 0.02f);
 		}
 		if (timer1s <= 1) { // это еще проще
 			timer1s += Time.deltaTime;
@@ -96,8 +97,8 @@ public class PlayScript : MonoBehaviour {
 					//запуск рекламы
 					multipleX10 = 10;
 					hit.collider.gameObject.SetActive (false);
-					StartCoroutine (wait5Minutes());
-					StartCoroutine (wait10Minutes());
+					StartCoroutine(wait5Minutes());
+					StartCoroutine(wait10Minutes());
 					break;
 
 				}
@@ -160,7 +161,7 @@ public class PlayScript : MonoBehaviour {
             return 5;
     }
 
-	void onDisable() {
+	void OnDisable() {
 		Preferences.setScore (Preferences.getScore() + multiplayer);
 	}
 
@@ -187,7 +188,7 @@ public class PlayScript : MonoBehaviour {
 
 	IEnumerator wait5Minutes(){
 		yield return new WaitForSeconds (30);//5 минут (изменил на 30 секунд для теста)
-		multipleX10 =1;
+		multipleX10 = 1;
 	}
 	IEnumerator wait10Minutes(){
 		yield return new WaitForSeconds (60);//10 минут (изменил на 60 секунд для теста)
