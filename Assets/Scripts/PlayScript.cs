@@ -59,15 +59,9 @@ public class PlayScript : MonoBehaviour {
 															Roskomnadzor.transform.localScale.y - 0.02f);
 		}
 		if (timer1s <= 1) { // это еще проще
-<<<<<<< HEAD
-			timer1s += Time.deltaTime;
-				
-=======
             timer1s += Time.deltaTime;		
-			print (clicks1s);
-            
+			print (clicks1s);          
             generateBonus();
->>>>>>> f542ff1175c75e23a8f34dbf1826ed3b88fb03f4
 		}
         else { 
 			float ips = (float) clicks1s;
