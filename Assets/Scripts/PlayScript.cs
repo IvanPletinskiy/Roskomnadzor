@@ -23,6 +23,7 @@ public class PlayScript : MonoBehaviour {
     public Text scoreText;
     public Text ipsText;
     public Text multiplayerText;
+    public Image bonus;
 
 	float timer1s = 0;
     float timer5s = 0;
@@ -58,8 +59,15 @@ public class PlayScript : MonoBehaviour {
 															Roskomnadzor.transform.localScale.y - 0.02f);
 		}
 		if (timer1s <= 1) { // это еще проще
+<<<<<<< HEAD
 			timer1s += Time.deltaTime;
 				
+=======
+            timer1s += Time.deltaTime;		
+			print (clicks1s);
+            
+            generateBonus();
+>>>>>>> f542ff1175c75e23a8f34dbf1826ed3b88fb03f4
 		}
         else { 
 			float ips = (float) clicks1s;
@@ -146,16 +154,22 @@ public class PlayScript : MonoBehaviour {
             isOnetouch = true;
         }
     }
-    
-    private int countMultiplyaer5s()
+
+
+    private void generateBonus()
     {
-        if (clicks5s <= 20)
+       // Image image = Instantiate(bonus, new Vector3(0f, -1f, 0f), new Quaternion()) as Image;
+       // image.overrideSprite =  Resources.Load<Sprite>("Pictures/viber");
+    }
+
+    private int countMultiplyaer5s() {
+        if (clicks5s <= 40)
             return 1;
-        else if (clicks5s <= 40)
-            return 2;
         else if (clicks5s <= 60)
-            return 3;
+            return 2;
         else if (clicks5s <= 80)
+            return 3;
+        else if (clicks5s <= 100)
             return 4;
         else 
             return 5;
