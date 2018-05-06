@@ -94,7 +94,7 @@ public class PlayScript : MonoBehaviour {
             clicks5s = 0;
             timer5s = 0;
         }
-		if (Input.GetKeyDown (KeyCode.Mouse0)) {
+		/*if (Input.GetKeyDown (KeyCode.Mouse0)) {
 			Ray ray = mainCamera.ScreenPointToRay (Input.mousePosition);
 			RaycastHit hit;
 			if (Physics.Raycast (ray, out hit)) {
@@ -132,15 +132,39 @@ public class PlayScript : MonoBehaviour {
         {
             if (isOnetouch)
             {
-                RaycastHit hit;
-                Ray ray = mainCamera.ScreenPointToRay(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Input.mousePosition.z));
-                if (Physics.Raycast(ray, out hit))
-                {
-                    if (hit.collider.name == "Roscomnadzor")
-                    {
-                        click();
-                    }
-                }
+				Ray ray = mainCamera.ScreenPointToRay (Input.mousePosition);
+				RaycastHit hit;
+				if (Physics.Raycast (ray, out hit)) {
+					switch (hit.collider.name) {
+					case "Back":
+						animLeft.GetComponent<Animator> ().runtimeAnimatorController = leftClose;
+						animRight.GetComponent<Animator> ().runtimeAnimatorController = rightClose;
+						StartCoroutine (loadMainMenu ());
+						break;
+					case "Roscomnadzor":
+						if (Random.Range (1, 4) == 1) //вероятность включения лого (сейчас шанс выпадения - 1 к 3)
+							generateBonus ();
+						if(hit.collider.transform.localScale.x <2)
+							hit.collider.transform.localScale = new Vector2 (Roskomnadzor.transform.localScale.x + 0.1f, Roskomnadzor.transform.localScale.y + 0.1f);
+						click();
+						break;
+					case "Ad":
+						print ("Ad");
+						//запуск рекламы
+						multipleX10 = 10;
+						hit.collider.gameObject.SetActive (false);
+						StartCoroutine(wait5Minutes());
+						StartCoroutine(wait10Minutes());
+						break;
+					case "Collider":
+						multipleLogo = 15;
+						for (int a = 0; a < numberOfLogo; a++)
+							bonus [a].SetActive (false);
+						StartCoroutine (wait10Seconds ());
+						break;
+
+					}
+				}
                 isOnetouch = false;
             }
         }
@@ -151,15 +175,39 @@ public class PlayScript : MonoBehaviour {
                 Touch[] touches = Input.touches;
                 for (int i = 0; i < Input.touchCount; i++)
                 {
-                    Ray ray = mainCamera.ScreenPointToRay(touches[i].position);
-                    RaycastHit hit;
-                    if (Physics.Raycast(ray, out hit))
-                    {
-                        if (hit.collider.name == "Roscomnadzor")
-                        {
-                            click();
-                        }
-                    }
+					Ray ray = mainCamera.ScreenPointToRay (Input.mousePosition);
+					RaycastHit hit;
+					if (Physics.Raycast (ray, out hit)) {
+						switch (hit.collider.name) {
+						case "Back":
+							animLeft.GetComponent<Animator> ().runtimeAnimatorController = leftClose;
+							animRight.GetComponent<Animator> ().runtimeAnimatorController = rightClose;
+							StartCoroutine (loadMainMenu ());
+							break;
+						case "Roscomnadzor":
+							if (Random.Range (1, 4) == 1) //вероятность включения лого (сейчас шанс выпадения - 1 к 3)
+								generateBonus ();
+							if(hit.collider.transform.localScale.x <2)
+								hit.collider.transform.localScale = new Vector2 (Roskomnadzor.transform.localScale.x + 0.1f, Roskomnadzor.transform.localScale.y + 0.1f);
+							click();
+							break;
+						case "Ad":
+							print ("Ad");
+							//запуск рекламы
+							multipleX10 = 10;
+							hit.collider.gameObject.SetActive (false);
+							StartCoroutine(wait5Minutes());
+							StartCoroutine(wait10Minutes());
+							break;
+						case "Collider":
+							multipleLogo = 15;
+							for (int a = 0; a < numberOfLogo; a++)
+								bonus [a].SetActive (false);
+							StartCoroutine (wait10Seconds ());
+							break;
+
+						}
+					}
                 }
                 isMultitouch = false;
             }
@@ -168,8 +216,50 @@ public class PlayScript : MonoBehaviour {
         {
             isMultitouch = true;
             isOnetouch = true;
-        }
-    }
+        }*/
+		Touch[] touches = Input.touches;
+		for (int i = 0; i < touches.Length; i++) {
+			Touch touch = touches [i];
+			if (touch.phase == TouchPhase.Began) {
+				Ray ray = mainCamera.ScreenPointToRay (touch.position);
+				RaycastHit hit;
+				if (Physics.Raycast (ray, out hit)) {
+					switch (hit.collider.name) {
+					case "Back":
+						animLeft.GetComponent<Animator> ().runtimeAnimatorController = leftClose;
+						animRight.GetComponent<Animator> ().runtimeAnimatorController = rightClose;
+						StartCoroutine (loadMainMenu ());
+						break;
+					case "Roscomnadzor":
+						if (Random.Range (1, 4) == 1) //вероятность включения лого (сейчас шанс выпадения - 1 к 3)
+							generateBonus ();
+						if(hit.collider.transform.localScale.x <2)
+							hit.collider.transform.localScale = new Vector2 (Roskomnadzor.transform.localScale.x + 0.1f, Roskomnadzor.transform.localScale.y + 0.1f);
+						click();
+						break;
+					case "Ad":
+						print ("Ad");
+						//запуск рекламы
+						multipleX10 = 10;
+						hit.collider.gameObject.SetActive (false);
+						StartCoroutine(wait5Minutes());
+						StartCoroutine(wait10Minutes());
+						break;
+					case "Collider":
+						multipleLogo = 15;
+						for (int a = 0; a < numberOfLogo; a++)
+							bonus [a].SetActive (false);
+						StartCoroutine (wait10Seconds ());
+						break;
+
+					}
+				}
+			}
+    	}
+	}
+	
+
+	
 
 
     private void generateBonus()
