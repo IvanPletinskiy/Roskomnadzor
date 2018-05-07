@@ -58,6 +58,12 @@ public class PlayScript : MonoBehaviour {
     }
 
 	void Update () {
+		if (Input.GetKeyDown (KeyCode.Escape)) {
+			StartCoroutine (loadMainMenu ());
+			animLeft.GetComponent<Animator> ().runtimeAnimatorController = leftClose;
+			animRight.GetComponent<Animator> ().runtimeAnimatorController = rightClose;
+		}
+
 		for(int i = 0;i < numberOfLogo;i++){
 			bonus[i].transform.localPosition = Vector3.Lerp (bonus[i].transform.localPosition, 
 															 pointPath.transform.localPosition,

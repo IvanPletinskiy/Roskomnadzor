@@ -14,6 +14,10 @@ public class MainMenuScriot : MonoBehaviour {
 	}
 
 	void Update () {
+		if (Input.GetKeyDown (KeyCode.Escape)) {
+			Application.Quit();
+		}
+
 		if (Input.GetKeyDown (KeyCode.Mouse0)) {
 			Ray ray = mainCamera.ScreenPointToRay (Input.mousePosition);
 			RaycastHit hit;
