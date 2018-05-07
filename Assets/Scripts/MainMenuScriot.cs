@@ -34,7 +34,7 @@ public class MainMenuScriot : MonoBehaviour {
                         break;
                     case "Music":
 						Preferences.setMusic(Preferences.isMusic());
-						music.SetActive (!Preferences.isMusic ());
+						music.SetActive (Preferences.isMusic ());
                         break;
                     }
 			}
