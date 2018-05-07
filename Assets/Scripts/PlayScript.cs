@@ -39,13 +39,13 @@ public class PlayScript : MonoBehaviour {
     private int clicks1s = 0; //кликов за прошлую секунду
     private int clicks5s = 0; //кликов за 5 секунд
 	private int baseMultiplayer = 1;//базовый множитель, увеличивается при достижении отметки 100, 1000, 10000 ip,
-	int scoreToMultiple = 1000;
+	int scoreToMultiple = 100;
 	int logoMultiplayer = 1;
     private int multiplayer5sBonus = 1; // множитель клика за 5 секунд (чем чаще кликает пользователь, тем он больше) обновляется каждые 5 сек
     private int multiplayer = 1; //итоговый множитель
 	int adMultiplayer = 1;
 
-	bool isCreateNewLogo=true;
+	bool isCreateNewLogo = true;
 
     bool isMultitouch;
     bool isOnetouch;
@@ -70,10 +70,15 @@ public class PlayScript : MonoBehaviour {
 															 speedOfBonus);
 		}
 
-		if (Preferences.getScore () >= scoreToMultiple) {
-			baseMultiplayer++;
-			scoreToMultiple *= 10;
-		}
+//		if (Preferences.getScore () >= scoreToMultiple) {
+//			baseMultiplayer++;
+//			scoreToMultiple *= 10;
+//		}
+        if (score > 100)
+            baseMultiplayer = score.ToString().Length;
+        else
+            baseMultiplayer = 1;
+
         updateScore();
         updateMultiplayer();
 
@@ -85,7 +90,7 @@ public class PlayScript : MonoBehaviour {
             timer1s += Time.deltaTime;		        
 		}
         else { 
-			float ips = (float) clicks1s;
+			float ips = (float) clicks1s * multiplayer;
 			print (ips);
 			ipsText.text = ips.ToString()+ " IP/s";
 			clicks1s = 0;
