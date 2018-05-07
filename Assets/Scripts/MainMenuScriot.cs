@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class MainMenuScriot : MonoBehaviour {
 
 	public Camera mainCamera;
+	public GameObject music;
 
 	void Start () {
         initializeGPS();
@@ -28,6 +29,8 @@ public class MainMenuScriot : MonoBehaviour {
                         Application.OpenURL("https://play.google.com/store/apps/details?id=com.handen.roskomnadzor");
                         break;
                     case "Music":
+						Preferences.setMusic(Preferences.isMusic());
+						music.SetActive (!Preferences.isMusic ());
                         break;
                     }
 			}
