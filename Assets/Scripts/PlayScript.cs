@@ -14,7 +14,7 @@ public class PlayScript : MonoBehaviour {
 
 	public GameObject adButton;
 
-	int numberOfLogo=2;
+	int numberOfLogo = 2;
 
 	public RuntimeAnimatorController left;
 	public RuntimeAnimatorController leftClose;
@@ -33,17 +33,17 @@ public class PlayScript : MonoBehaviour {
 	float timer1s = 0;
     float timer5s = 0;
 
-	float speedOfBonus = 0.4f;
+	float speedOfBonus = 0.3f;
 
     private int score; //счёт для надписи Score 
     private int clicks1s = 0; //кликов за прошлую секунду
     private int clicks5s = 0; //кликов за 5 секунд
 	private int baseMultiplayer = 1;//базовый множитель, увеличивается при достижении отметки 100, 1000, 10000 ip,
-	int scoreToMultiple = 100;
-	int multipleLogo=1;
+	int scoreToMultiple = 1000;
+	int logoMultiplayer = 1;
     private int multiplayer5sBonus = 1; // множитель клика за 5 секунд (чем чаще кликает пользователь, тем он больше) обновляется каждые 5 сек
     private int multiplayer = 1; //итоговый множитель
-	int multipleX10=1;
+	int adMultiplayer = 1;
 
 	bool isCreateNewLogo=true;
 
@@ -58,10 +58,11 @@ public class PlayScript : MonoBehaviour {
     }
 
 	void Update () {
-		for(int i =0;i< numberOfLogo;i++){
-			bonus[i].transform.localPosition = Vector3.Lerp (bonus[i].transform.localPosition, pointPath.transform.localPosition, speedOfBonus);
+		for(int i = 0;i < numberOfLogo;i++){
+			bonus[i].transform.localPosition = Vector3.Lerp (bonus[i].transform.localPosition, 
+															 pointPath.transform.localPosition,
+															 speedOfBonus);
 		}
-			
 
 		if (Preferences.getScore () >= scoreToMultiple) {
 			baseMultiplayer++;
@@ -78,15 +79,14 @@ public class PlayScript : MonoBehaviour {
             timer1s += Time.deltaTime;		        
 		}
         else { 
-			float ips = (float) clicks1s;
+			float ips = (float) clicks1s * multiplayer;
 			print (ips);
 			ipsText.text = ips.ToString()+ " IP/s";
 			clicks1s = 0;
 			timer1s = 0;
 		}
         if (timer5s <= 5) {
-			timer5s += Time.deltaTime;
-                
+			timer5s += Time.deltaTime;       
         }
         else {
 			print (clicks5s);
@@ -94,129 +94,6 @@ public class PlayScript : MonoBehaviour {
             clicks5s = 0;
             timer5s = 0;
         }
-		/*if (Input.GetKeyDown (KeyCode.Mouse0)) {
-			Ray ray = mainCamera.ScreenPointToRay (Input.mousePosition);
-			RaycastHit hit;
-			if (Physics.Raycast (ray, out hit)) {
-				switch (hit.collider.name) {
-				case "Back":
-					animLeft.GetComponent<Animator> ().runtimeAnimatorController = leftClose;
-					animRight.GetComponent<Animator> ().runtimeAnimatorController = rightClose;
-					StartCoroutine (loadMainMenu ());
-					break;
-				case "Roscomnadzor":
-					if (Random.Range (1, 4) == 1) //вероятность включения лого (сейчас шанс выпадения - 1 к 3)
-						generateBonus ();
-					hit.collider.transform.localScale = new Vector2 (Roskomnadzor.transform.localScale.x + 0.1f, Roskomnadzor.transform.localScale.y + 0.1f);
-					click();
-					break;
-				case "Ad":
-					print ("Ad");
-					//запуск рекламы
-					multipleX10 = 10;
-					hit.collider.gameObject.SetActive (false);
-					StartCoroutine(wait5Minutes());
-					StartCoroutine(wait10Minutes());
-					break;
-				case "Collider":
-					multipleLogo = 15;
-					for (int a = 0; a < numberOfLogo; a++)
-						bonus [a].SetActive (false);
-					StartCoroutine (wait10Seconds ());
-					break;
-
-				}
-			}
-		}
-        if (Input.touchCount == 1)
-        {
-            if (isOnetouch)
-            {
-				Ray ray = mainCamera.ScreenPointToRay (Input.mousePosition);
-				RaycastHit hit;
-				if (Physics.Raycast (ray, out hit)) {
-					switch (hit.collider.name) {
-					case "Back":
-						animLeft.GetComponent<Animator> ().runtimeAnimatorController = leftClose;
-						animRight.GetComponent<Animator> ().runtimeAnimatorController = rightClose;
-						StartCoroutine (loadMainMenu ());
-						break;
-					case "Roscomnadzor":
-						if (Random.Range (1, 4) == 1) //вероятность включения лого (сейчас шанс выпадения - 1 к 3)
-							generateBonus ();
-						if(hit.collider.transform.localScale.x <2)
-							hit.collider.transform.localScale = new Vector2 (Roskomnadzor.transform.localScale.x + 0.1f, Roskomnadzor.transform.localScale.y + 0.1f);
-						click();
-						break;
-					case "Ad":
-						print ("Ad");
-						//запуск рекламы
-						multipleX10 = 10;
-						hit.collider.gameObject.SetActive (false);
-						StartCoroutine(wait5Minutes());
-						StartCoroutine(wait10Minutes());
-						break;
-					case "Collider":
-						multipleLogo = 15;
-						for (int a = 0; a < numberOfLogo; a++)
-							bonus [a].SetActive (false);
-						StartCoroutine (wait10Seconds ());
-						break;
-
-					}
-				}
-                isOnetouch = false;
-            }
-        }
-        else if (Input.touchCount > 1)
-        {
-            if (isMultitouch)
-            {
-                Touch[] touches = Input.touches;
-                for (int i = 0; i < Input.touchCount; i++)
-                {
-					Ray ray = mainCamera.ScreenPointToRay (Input.mousePosition);
-					RaycastHit hit;
-					if (Physics.Raycast (ray, out hit)) {
-						switch (hit.collider.name) {
-						case "Back":
-							animLeft.GetComponent<Animator> ().runtimeAnimatorController = leftClose;
-							animRight.GetComponent<Animator> ().runtimeAnimatorController = rightClose;
-							StartCoroutine (loadMainMenu ());
-							break;
-						case "Roscomnadzor":
-							if (Random.Range (1, 4) == 1) //вероятность включения лого (сейчас шанс выпадения - 1 к 3)
-								generateBonus ();
-							if(hit.collider.transform.localScale.x <2)
-								hit.collider.transform.localScale = new Vector2 (Roskomnadzor.transform.localScale.x + 0.1f, Roskomnadzor.transform.localScale.y + 0.1f);
-							click();
-							break;
-						case "Ad":
-							print ("Ad");
-							//запуск рекламы
-							multipleX10 = 10;
-							hit.collider.gameObject.SetActive (false);
-							StartCoroutine(wait5Minutes());
-							StartCoroutine(wait10Minutes());
-							break;
-						case "Collider":
-							multipleLogo = 15;
-							for (int a = 0; a < numberOfLogo; a++)
-								bonus [a].SetActive (false);
-							StartCoroutine (wait10Seconds ());
-							break;
-
-						}
-					}
-                }
-                isMultitouch = false;
-            }
-        }
-        else
-        {
-            isMultitouch = true;
-            isOnetouch = true;
-        }*/
 		Touch[] touches = Input.touches;
 		for (int i = 0; i < touches.Length; i++) {
 			Touch touch = touches [i];
@@ -231,22 +108,22 @@ public class PlayScript : MonoBehaviour {
 						StartCoroutine (loadMainMenu ());
 						break;
 					case "Roscomnadzor":
-						if (Random.Range (1, 4) == 1) //вероятность включения лого (сейчас шанс выпадения - 1 к 3)
+						if (Random.Range (1, 100) == 1) //вероятность включения лого (сейчас шанс выпадения - 1 к 3)
 							generateBonus ();
-						if(hit.collider.transform.localScale.x <2)
+						if(hit.collider.transform.localScale.x < 2)
 							hit.collider.transform.localScale = new Vector2 (Roskomnadzor.transform.localScale.x + 0.1f, Roskomnadzor.transform.localScale.y + 0.1f);
 						click();
 						break;
 					case "Ad":
 						print ("Ad");
 						//запуск рекламы
-						multipleX10 = 10;
+						adMultiplayer = 5;
 						hit.collider.gameObject.SetActive (false);
 						StartCoroutine(wait5Minutes());
 						StartCoroutine(wait10Minutes());
 						break;
 					case "Collider":
-						multipleLogo = 15;
+						logoMultiplayer = 15;
 						for (int a = 0; a < numberOfLogo; a++)
 							bonus [a].SetActive (false);
 						StartCoroutine (wait10Seconds ());
@@ -257,10 +134,6 @@ public class PlayScript : MonoBehaviour {
 			}
     	}
 	}
-	
-
-	
-
 
     private void generateBonus()
     {
@@ -269,7 +142,6 @@ public class PlayScript : MonoBehaviour {
 			bonus [randomLogo].SetActive (true);
 			isCreateNewLogo = false;
 		}
-
     }
 
     private int countMultiplyaer5s() {
@@ -294,7 +166,7 @@ public class PlayScript : MonoBehaviour {
     }
 
     private void updateMultiplayer() { //обновляем multiplayer и текст Multiplayer
-		multiplayer = baseMultiplayer * multiplayer5sBonus* multipleX10*multipleLogo;
+		multiplayer = baseMultiplayer * multiplayer5sBonus * adMultiplayer * logoMultiplayer;
         multiplayerText.text = "X" + multiplayer.ToString();
     }
 
@@ -311,13 +183,13 @@ public class PlayScript : MonoBehaviour {
 
 	IEnumerator wait10Seconds(){
 		yield return new WaitForSeconds (10);
-		multipleLogo= 1;
+		logoMultiplayer = 1;
 		isCreateNewLogo = true;
 	}
 
 	IEnumerator wait5Minutes(){
 		yield return new WaitForSeconds (30);//5 минут (изменил на 30 секунд для теста)
-		multipleX10 = 1;
+		adMultiplayer = 1;
 	}
 	IEnumerator wait10Minutes(){
 		yield return new WaitForSeconds (60);//10 минут (изменил на 60 секунд для теста)

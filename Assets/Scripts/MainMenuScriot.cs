@@ -35,7 +35,6 @@ public class MainMenuScriot : MonoBehaviour {
 	}
 
     private void initializeGPS() {
-        
         // Рекомендовано для откладки:
         PlayGamesPlatform.DebugLogEnabled = true;
         // Активировать Google Play Games Platform
@@ -47,7 +46,6 @@ public class MainMenuScriot : MonoBehaviour {
 
             });
         }
-        
     }
 
     private void showLeaderboard()
@@ -82,7 +80,7 @@ public class MainMenuScriot : MonoBehaviour {
     
     private void showToast(string toastText)
     {
-          //Перед использованием в плагине на сцену установить Prefab из папки Demo Плагина  
+        //Перед использованием в плагине на сцену установить Prefab из папки Demo Плагина  
         AndroidDialogAndToastBinding.instance.toastShort(toastText);
     }
 }
