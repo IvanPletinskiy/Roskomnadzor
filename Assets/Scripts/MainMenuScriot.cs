@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using GooglePlayGames;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -34,20 +35,19 @@ public class MainMenuScriot : MonoBehaviour {
 	}
 
     private void initializeGPS() {
-        /*
+        
         // Рекомендовано для откладки:
-        //        PlayGamesPlatform.DebugLogEnabled = true;
+        PlayGamesPlatform.DebugLogEnabled = true;
         // Активировать Google Play Games Platform
-        //      PlayGamesPlatform.Activate();
+        PlayGamesPlatform.Activate();
         // Аутентификация игрока:
         if (!Social.localUser.authenticated && 
-            !Application.internetReachability == NetworkReachability.NotReachable) {
-            Social.localUser.Authenticate((bool isAuthenticated) =>
-            {
+            Application.internetReachability != NetworkReachability.NotReachable) {
+            Social.localUser.Authenticate((bool isAuthenticated) => {
 
             });
         }
-        */
+        
     }
 
     private void showLeaderboard()
@@ -61,7 +61,7 @@ public class MainMenuScriot : MonoBehaviour {
             if (Social.localUser.authenticated)
             {
                 Social.ShowLeaderboardUI();
-                //Social.ReportScore(TilesScript.score, "CgkIwpTli-UWEAIQAA", (bool success) => { });
+                Social.ReportScore(Preferences.getScore(), "CgkIwpTli-UWEAIQAA", (bool success) => { });
             }
             else
             {
@@ -71,7 +71,7 @@ public class MainMenuScriot : MonoBehaviour {
                     if (isAuthenticated)
                     {
                         Social.ShowLeaderboardUI();
-                        //      Social.ReportScore(TilesScript.score, "CgkIwpTli-UWEAIQAA", (bool success) => { });
+                        Social.ReportScore(Preferences.getScore(), "CgkIwpTli-UWEAIQAA", (bool success) => { });
                     }
                     else
                         showToast("Произошла ошибка, не получается открыть таблицу рекордов");
