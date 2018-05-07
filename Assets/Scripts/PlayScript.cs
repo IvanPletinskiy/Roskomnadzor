@@ -14,7 +14,7 @@ public class PlayScript : MonoBehaviour {
 
 	public GameObject adButton;
 
-	int numberOfLogo = 2;
+	int numberOfLogo = 10;
 
 	public RuntimeAnimatorController left;
 	public RuntimeAnimatorController leftClose;
@@ -79,7 +79,7 @@ public class PlayScript : MonoBehaviour {
             timer1s += Time.deltaTime;		        
 		}
         else { 
-			float ips = (float) clicks1s * multiplayer;
+			float ips = (float) clicks1s;
 			print (ips);
 			ipsText.text = ips.ToString()+ " IP/s";
 			clicks1s = 0;
@@ -94,6 +94,43 @@ public class PlayScript : MonoBehaviour {
             clicks5s = 0;
             timer5s = 0;
         }
+		if (Input.GetKeyDown (KeyCode.Mouse0)) {
+			Ray ray = mainCamera.ScreenPointToRay (Input.mousePosition);
+			RaycastHit hit;
+			if (Physics.Raycast (ray, out hit)) {
+				switch (hit.collider.name) {
+				case "Back":
+					animLeft.GetComponent<Animator> ().runtimeAnimatorController = leftClose;
+					animRight.GetComponent<Animator> ().runtimeAnimatorController = rightClose;
+					StartCoroutine (loadMainMenu ());
+					break;
+				case "Roscomnadzor":
+					if (Random.Range (1, 4) == 1) //вероятность включения лого (сейчас шанс выпадения - 1 к 99)
+						generateBonus ();
+					if(hit.collider.transform.localScale.x < 2)
+						hit.collider.transform.localScale = new Vector2 (Roskomnadzor.transform.localScale.x + 0.1f, Roskomnadzor.transform.localScale.y + 0.1f);
+					click();
+					break;
+				case "Ad":
+					print ("Ad");
+					//запуск рекламы
+					adMultiplayer = 5;
+					hit.collider.gameObject.SetActive (false);
+					StartCoroutine(wait5Minutes());
+					StartCoroutine(wait10Minutes());
+					break;
+				case "Collider":
+					logoMultiplayer = 15;
+					for (int a = 0; a < numberOfLogo; a++)
+						bonus [a].SetActive (false);
+					StartCoroutine (wait10Seconds ());
+					break;
+
+				}
+			}
+		}
+
+
 		Touch[] touches = Input.touches;
 		for (int i = 0; i < touches.Length; i++) {
 			Touch touch = touches [i];
@@ -108,7 +145,7 @@ public class PlayScript : MonoBehaviour {
 						StartCoroutine (loadMainMenu ());
 						break;
 					case "Roscomnadzor":
-						if (Random.Range (1, 100) == 1) //вероятность включения лого (сейчас шанс выпадения - 1 к 3)
+						if (Random.Range (1, 100) == 1) //вероятность включения лого (сейчас шанс выпадения - 1 к 99)
 							generateBonus ();
 						if(hit.collider.transform.localScale.x < 2)
 							hit.collider.transform.localScale = new Vector2 (Roskomnadzor.transform.localScale.x + 0.1f, Roskomnadzor.transform.localScale.y + 0.1f);
@@ -138,7 +175,7 @@ public class PlayScript : MonoBehaviour {
     private void generateBonus()
     {
 		if (isCreateNewLogo) {
-			int randomLogo = Random.Range (0, 2);
+			int randomLogo = Random.Range (0, numberOfLogo);
 			bonus [randomLogo].SetActive (true);
 			isCreateNewLogo = false;
 		}
