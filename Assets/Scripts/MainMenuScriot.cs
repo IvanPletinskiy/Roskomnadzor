@@ -59,10 +59,10 @@ public class MainMenuScriot : MonoBehaviour {
 	{
 		Appodeal.disableLocationPermissionCheck();
 		Appodeal.disableWriteExternalStoragePermissionCheck();
-		if (!Appodeal.isLoaded(Appodeal.NON_SKIPPABLE_VIDEO))
+		//if (!Appodeal.isLoaded(Appodeal.NON_SKIPPABLE_VIDEO))
 		{
 			//if(Appodeal.isLoaded())
-			Appodeal.disableNetwork("inmobi");
+			//Appodeal.disableNetwork("inmobi");
 			string appKey = "4eb13d8e55c04d001c7d2c5214c815e881c9a95c0a15f8f9";
 			Appodeal.initialize(appKey, Appodeal.NON_SKIPPABLE_VIDEO);
 		}

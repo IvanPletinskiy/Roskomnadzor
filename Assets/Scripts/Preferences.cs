@@ -8,7 +8,7 @@ public class Preferences {
     private static string SCORE = "score";
     private static string MUSIC = "music";
 
-    public static int getMultiplayer()
+    public static int getBaseMultiplayer()
     {
         return PlayerPrefs.GetInt(MULTIPLAYER, 1);
     }
@@ -17,19 +17,19 @@ public class Preferences {
     /// Учти, что нужно сохранять базовый множитель
     /// </summary>
     /// <returns></returns>
-    public static void setMultiplayer(int multiplayer)
+    public static void setBaseMultiplayer(int multiplayer)
     {
         PlayerPrefs.SetInt(MULTIPLAYER, multiplayer);
     }
 
-    public static int getScore()
+    public static long getScore()
     {
-        return PlayerPrefs.GetInt(SCORE);
+        return long.Parse(PlayerPrefs.GetString(SCORE));
     }
 
-    public static void setScore(int score)
+    public static void setScore(long score)
     {
-        PlayerPrefs.SetInt(SCORE, score);
+        PlayerPrefs.SetString(SCORE, score.ToString());
     }
 
     public static bool isMusic()

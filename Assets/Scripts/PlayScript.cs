@@ -36,7 +36,7 @@ public class PlayScript : MonoBehaviour {
 
 	float speedOfBonus = 0.25f;
 
-    private int score; //счёт для надписи Score 
+    private long score; //счёт для надписи Score 
     private int clicks1s = 0; //кликов за прошлую секунду
     private int clicks5s = 0; //кликов за 5 секунд
 	private int baseMultiplayer = 1;//базовый множитель, увеличивается при достижении отметки 100, 1000, 10000 ip,
@@ -53,9 +53,9 @@ public class PlayScript : MonoBehaviour {
 
     void Start () {
 		//Preferences.setScore (0);
-        multiplayer = Preferences.getMultiplayer();
+        baseMultiplayer = Preferences.getBaseMultiplayer();
+        score = Preferences.getScore();
 		animBackground.SetActive(true);
-
     }
 
 	void Update () {
@@ -71,6 +71,8 @@ public class PlayScript : MonoBehaviour {
 		}
         updateScore();
         updateMultiplayer();
+
+        adButton.SetActive(Appodeal.isLoaded(Appodeal.NON_SKIPPABLE_VIDEO));
 
         if (Roskomnadzor.transform.localScale.x > 1.7f) {
 			Roskomnadzor.transform.localScale = new Vector2(Roskomnadzor.transform.localScale.x - 0.02f, 
@@ -137,6 +139,11 @@ public class PlayScript : MonoBehaviour {
     	}
 	}
 
+    void onDestroy() {
+        Preferences.setBaseMultiplayer(baseMultiplayer);
+        Preferences.setScore(score);
+    }
+
     private void generateBonus() {
 		if (isCreateNewLogo) {
 			int randomLogo = Random.Range (0, 2);
@@ -163,7 +170,7 @@ public class PlayScript : MonoBehaviour {
 	}
 
     private void updateScore() { //обновляем текст Score
-		scoreText.text = Preferences.getScore().ToString();
+		scoreText.text = score.ToString();
     }
 
     private void updateMultiplayer() { //обновляем multiplayer и текст Multiplayer
@@ -174,7 +181,8 @@ public class PlayScript : MonoBehaviour {
     private void click() { // метод обработки клика, увеличиваем счёт и все нажатия
         clicks1s++;
         clicks5s++;
-		Preferences.setScore (Preferences.getScore() + multiplayer);
+        score += multiplayer;
+//		Preferences.setScore (Preferences.getScore() + multiplayer);
     }
 
 	private void showAd() {
