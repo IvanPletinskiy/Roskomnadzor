@@ -15,9 +15,9 @@ public class PlayScript : MonoBehaviour {
 
 	public GameObject adButton;
 
-	int numberOfLogo = 2;
+    int numberOfLogo = 10;
 
-	public RuntimeAnimatorController left;
+    public RuntimeAnimatorController left;
 	public RuntimeAnimatorController leftClose;
 	public RuntimeAnimatorController right;
 	public RuntimeAnimatorController rightClose;
@@ -40,8 +40,8 @@ public class PlayScript : MonoBehaviour {
     private int clicks1s = 0; //кликов за прошлую секунду
     private int clicks5s = 0; //кликов за 5 секунд
 	private int baseMultiplayer = 1;//базовый множитель, увеличивается при достижении отметки 100, 1000, 10000 ip,
-	int scoreToMultiple = 1000;
-	int logoMultiplayer = 1;
+    int scoreToMultiple = 100;
+    int logoMultiplayer = 1;
     private int multiplayer5sBonus = 1; // множитель клика за 5 секунд (чем чаще кликает пользователь, тем он больше) обновляется каждые 5 сек
     private int multiplayer = 1; //итоговый множитель
 	int adMultiplayer = 1;
@@ -59,16 +59,22 @@ public class PlayScript : MonoBehaviour {
     }
 
 	void Update () {
-		for(int i = 0;i < numberOfLogo;i++){
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            StartCoroutine(loadMainMenu());
+            animLeft.GetComponent<Animator>().runtimeAnimatorController = leftClose;
+            animRight.GetComponent<Animator>().runtimeAnimatorController = rightClose;
+        }
+        for (int i = 0;i < numberOfLogo;i++){
 			bonus[i].transform.localPosition = Vector3.Lerp (bonus[i].transform.localPosition, 
 															 pointPath.transform.localPosition,
 															 speedOfBonus);
 		}
 
-		if (Preferences.getScore () >= scoreToMultiple) {
-			baseMultiplayer++;
-			scoreToMultiple *= 10;
-		}
+        if (score > 100)
+            baseMultiplayer = score.ToString().Length;
+        else
+            baseMultiplayer = 1;
+
         updateScore();
         updateMultiplayer();
 
@@ -146,8 +152,8 @@ public class PlayScript : MonoBehaviour {
 
     private void generateBonus() {
 		if (isCreateNewLogo) {
-			int randomLogo = Random.Range (0, 2);
-			bonus [randomLogo].SetActive (true);
+            int randomLogo = Random.Range(0, numberOfLogo);
+            bonus [randomLogo].SetActive (true);
 			isCreateNewLogo = false;
 		}
     }

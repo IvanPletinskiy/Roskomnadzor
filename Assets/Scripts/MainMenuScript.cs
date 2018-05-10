@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using AppodealAds.Unity.Api;
 
-public class MainMenuScriot : MonoBehaviour {
+public class MainMenuScript : MonoBehaviour {
 
 	public Camera mainCamera;
 	public GameObject music;
@@ -16,7 +16,11 @@ public class MainMenuScriot : MonoBehaviour {
 	}
 
 	void Update () {
-		if (Input.GetKeyDown (KeyCode.Mouse0)) {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+        if (Input.GetKeyDown (KeyCode.Mouse0)) {
 			Ray ray = mainCamera.ScreenPointToRay (Input.mousePosition);
 			RaycastHit hit;
 			if (Physics.Raycast (ray, out hit)) {
