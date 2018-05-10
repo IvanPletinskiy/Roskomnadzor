@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using AppodealAds.Unity.Api;
 
 public class MainMenuScriot : MonoBehaviour {
 
@@ -11,13 +12,10 @@ public class MainMenuScriot : MonoBehaviour {
 
 	void Start () {
         initializeGPS();
+		initializeAd ();
 	}
 
 	void Update () {
-		if (Input.GetKeyDown (KeyCode.Escape)) {
-			Application.Quit();
-		}
-
 		if (Input.GetKeyDown (KeyCode.Mouse0)) {
 			Ray ray = mainCamera.ScreenPointToRay (Input.mousePosition);
 			RaycastHit hit;
@@ -34,7 +32,7 @@ public class MainMenuScriot : MonoBehaviour {
                         break;
                     case "Music":
 						Preferences.setMusic(Preferences.isMusic());
-						music.SetActive (Preferences.isMusic ());
+						music.SetActive (!Preferences.isMusic ());
                         break;
                     }
 			}
@@ -42,6 +40,7 @@ public class MainMenuScriot : MonoBehaviour {
 	}
 
     private void initializeGPS() {
+		#if UNITY_ANDROID
         // Рекомендовано для откладки:
         PlayGamesPlatform.DebugLogEnabled = true;
         // Активировать Google Play Games Platform
@@ -53,7 +52,21 @@ public class MainMenuScriot : MonoBehaviour {
 
             });
         }
+		#endif
     }
+
+	public void initializeAd()
+	{
+		Appodeal.disableLocationPermissionCheck();
+		Appodeal.disableWriteExternalStoragePermissionCheck();
+		if (!Appodeal.isLoaded(Appodeal.NON_SKIPPABLE_VIDEO))
+		{
+			//if(Appodeal.isLoaded())
+			Appodeal.disableNetwork("inmobi");
+			string appKey = "4eb13d8e55c04d001c7d2c5214c815e881c9a95c0a15f8f9";
+			Appodeal.initialize(appKey, Appodeal.NON_SKIPPABLE_VIDEO);
+		}
+	}
 
     private void showLeaderboard()
     {
