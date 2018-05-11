@@ -71,7 +71,7 @@ public class PlayScript : MonoBehaviour {
 		}
 
         if (score > 100)
-            baseMultiplayer = score.ToString().Length;
+            baseMultiplayer = score.ToString().Length - 1;
         else
             baseMultiplayer = 1;
 
@@ -118,7 +118,7 @@ public class PlayScript : MonoBehaviour {
 						StartCoroutine (loadMainMenu ());
 						break;
 					case "Roscomnadzor":
-						if (Random.Range (1, 100) == 1) //вероятность включения лого (сейчас шанс выпадения - 1 к 3)
+						if (Random.Range (1, 250) == 1) //вероятность включения лого (сейчас шанс выпадения - 1 к 3)
 							generateBonus ();
 						if(hit.collider.transform.localScale.x < 2)
 							hit.collider.transform.localScale = new Vector2 (Roskomnadzor.transform.localScale.x + 0.1f, Roskomnadzor.transform.localScale.y + 0.1f);
@@ -134,7 +134,7 @@ public class PlayScript : MonoBehaviour {
 						StartCoroutine(wait10Minutes());
 						break;
 					case "Collider":
-						logoMultiplayer = 15;
+						logoMultiplayer = 5;
 						for (int a = 0; a < numberOfLogo; a++)
 							bonus [a].SetActive (false);
 						StartCoroutine (wait10Seconds ());
